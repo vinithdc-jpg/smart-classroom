@@ -1,65 +1,137 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState, useEffect } from 'react';
+import Navbar from '@/components/Navbar';
+import FloorSelector from '@/components/FloorSelector';
+import RoomGrid from '@/components/RoomGrid';
+import BookingModal from '@/components/BookingModal';
+import { db, mockFloors, mockRooms, mockBookings } from '@/lib/mockDb';
+
+export default function HomePage() {
+  const [floors, setFloors] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [selectedFloor, setSelectedFloor] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Initialize data
+  useEffect(() => {
+    setFloors(mockFloors);
+    setRooms(mockRooms);
+    setBookings(mockBookings);
+    // Set first active floor as default
+    const firstActive = mockFloors.find((f) => f.isActive);
+    if (firstActive) {
+      setSelectedFloor(firstActive.id);
+    }
+  }, []);
+
+  const handleRoomSelect = (room) => {
+    setSelectedRoom(room);
+    setShowBookingModal(true);
+  };
+
+  const handleBooking = (bookingData) => {
+    // Create new booking
+    const newBooking = db.bookings.create({
+      ...bookingData,
+      userId: '1',
+      status: 'confirmed'
+    });
+
+    setBookings((prev) => [...prev, newBooking]);
+    setShowBookingModal(false);
+    setSelectedRoom(null);
+
+    // Show success message
+    setSuccessMessage(`✅ Room ${selectedRoom.roomNumber} booked successfully!`);
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen bg-slate-900">
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="bg-green-900/50 border-l-4 border-green-500 px-4 py-3 text-green-400 text-sm animate-pulse">
+          {successMessage}
+        </div>
+      )}
+
+      {/* Floor Selector */}
+      {selectedFloor && (
+        <FloorSelector
+          floors={floors}
+          selectedFloor={selectedFloor}
+          onFloorChange={setSelectedFloor}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+      )}
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Page Title */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            🏢 Room Allocation Dashboard
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-slate-400">
+            Select a floor and book your preferred meeting room
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {/* Room Grid */}
+        {selectedFloor && (
+          <RoomGrid
+            rooms={rooms}
+            bookings={bookings}
+            selectedFloor={selectedFloor}
+            onRoomSelect={handleRoomSelect}
+          />
+        )}
       </main>
+
+      {/* Booking Modal */}
+      {selectedRoom && (
+        <BookingModal
+          room={selectedRoom}
+          isOpen={showBookingModal}
+          onClose={() => {
+            setShowBookingModal(false);
+            setSelectedRoom(null);
+          }}
+          onBook={handleBooking}
+          bookings={bookings}
+        />
+      )}
+
+      {/* Legend */}
+      <footer className="bg-slate-800 border-t border-slate-700 py-6 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-sm font-medium text-white mb-3">Legend</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-green-500 rounded"></div>
+              <span className="text-sm text-slate-300">Free</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-red-500 rounded"></div>
+              <span className="text-sm text-slate-300">Occupied</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+              <span className="text-sm text-slate-300">Reserved</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-gray-500 rounded"></div>
+              <span className="text-sm text-slate-300">Unavailable</span>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
