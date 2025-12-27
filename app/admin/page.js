@@ -16,6 +16,7 @@ export default function AdminPage() {
   const [rooms, setRooms] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Initialize data
   useEffect(() => {
@@ -49,12 +50,35 @@ export default function AdminPage() {
     <div className="min-h-screen bg-slate-900">
       <Navbar />
 
-      <div className="flex">
-        {/* Sidebar */}
-        <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+      {/* Mobile Menu Button */}
+      <div className="md:hidden bg-slate-800 border-b border-slate-700 px-4 py-3 flex justify-between items-center">
+        <h2 className="text-white font-semibold text-sm">Admin Menu</h2>
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 hover:bg-slate-700 rounded transition text-white"
+        >
+          {sidebarOpen ? '✕' : '☰'}
+        </button>
+      </div>
+
+      <div className="flex flex-col md:flex-row">
+        {/* Sidebar - Collapsible on mobile */}
+        {sidebarOpen && (
+          <div className="bg-slate-800 border-b md:border-b-0 md:border-r border-slate-700 p-6 md:w-64 md:min-h-screen w-full">
+            <AdminSidebar activeTab={activeTab} onTabChange={(tab) => {
+              setActiveTab(tab);
+              setSidebarOpen(false);
+            }} />
+          </div>
+        )}
+        
+        {/* Fallback for desktop sidebar */}
+        <div className="hidden md:block md:w-64 md:bg-slate-800 md:border-r md:border-slate-700 md:p-6">
+          <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 md:p-6 w-full">
           {loading ? (
             <div className="flex items-center justify-center h-96">
               <p className="text-slate-400">Loading...</p>
@@ -62,11 +86,11 @@ export default function AdminPage() {
           ) : (
             <>
               {/* Page Header */}
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">
+              <div className="mb-6 md:mb-8">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
                   ⚙️ Admin Dashboard
                 </h1>
-                <p className="text-slate-400">
+                <p className="text-slate-400 text-sm md:text-base">
                   Manage rooms, bookings, and system settings
                 </p>
               </div>

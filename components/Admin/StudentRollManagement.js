@@ -129,14 +129,14 @@ export default function StudentRollManagement() {
       )}
 
       {/* Selection Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mb-6">
         {/* Course Selection */}
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Course</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Course</label>
           <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
           >
             <option value="">Select Course</option>
             {courses.map(course => (
@@ -147,11 +147,11 @@ export default function StudentRollManagement() {
 
         {/* Year Selection */}
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Year</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Year</label>
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
             disabled={!selectedCourse}
           >
             <option value="">Select Year</option>
@@ -163,11 +163,11 @@ export default function StudentRollManagement() {
 
         {/* Section Selection */}
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Section</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Section</label>
           <select
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
             disabled={!selectedYear}
           >
             <option value="">Select Section</option>
@@ -180,15 +180,15 @@ export default function StudentRollManagement() {
 
       {/* Class Info and Add Button */}
       {selectedCourse && selectedYear && selectedSection && (
-        <div className="flex justify-between items-center mb-6 p-4 bg-slate-700 rounded-lg">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 p-3 md:p-4 bg-slate-700 rounded-lg gap-3">
           <div>
-            <p className="text-slate-300 text-sm">
-              <span className="font-semibold text-white">Selected Class:</span> {details.courseName} {details.yearName} {details.sectionName}
+            <p className="text-slate-300 text-xs md:text-sm">
+              <span className="font-semibold text-white">Class:</span> {details.courseName} {details.yearName} {details.sectionName}
             </p>
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            className="w-full sm:w-auto px-3 md:px-4 py-2 bg-blue-600 text-white font-semibold text-sm rounded-lg hover:bg-blue-700 transition"
           >
             {showForm ? '✕ Cancel' : '+ Add Student'}
           </button>
@@ -197,35 +197,35 @@ export default function StudentRollManagement() {
 
       {/* Add Student Form */}
       {showForm && selectedCourse && selectedYear && selectedSection && (
-        <div className="mb-6 p-4 bg-slate-700 rounded-lg border border-slate-600">
-          <h3 className="text-lg font-semibold text-white mb-4">Add New Student</h3>
+        <div className="mb-6 p-3 md:p-4 bg-slate-700 rounded-lg border border-slate-600">
+          <h3 className="text-base md:text-lg font-semibold text-white mb-4">Add New Student</h3>
           <form onSubmit={handleAddStudent}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mb-4">
               <input
                 type="text"
                 placeholder="Student Name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="px-4 py-2 bg-slate-600 text-white border border-slate-500 rounded-lg focus:outline-none focus:border-blue-500"
+                className="px-3 md:px-4 py-2 bg-slate-600 text-white text-sm border border-slate-500 rounded-lg focus:outline-none focus:border-blue-500"
               />
               <input
                 type="text"
-                placeholder="Roll No (e.g., BCA001)"
+                placeholder="Roll No"
                 value={formData.rollNo}
                 onChange={(e) => setFormData({ ...formData, rollNo: e.target.value })}
-                className="px-4 py-2 bg-slate-600 text-white border border-slate-500 rounded-lg focus:outline-none focus:border-blue-500"
+                className="px-3 md:px-4 py-2 bg-slate-600 text-white text-sm border border-slate-500 rounded-lg focus:outline-none focus:border-blue-500"
               />
               <input
                 type="email"
                 placeholder="Email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="px-4 py-2 bg-slate-600 text-white border border-slate-500 rounded-lg focus:outline-none focus:border-blue-500"
+                className="px-3 md:px-4 py-2 bg-slate-600 text-white text-sm border border-slate-500 rounded-lg focus:outline-none focus:border-blue-500"
               />
             </div>
             <button
               type="submit"
-              className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
+              className="w-full sm:w-auto px-4 md:px-6 py-2 bg-green-600 text-white font-semibold text-sm rounded-lg hover:bg-green-700 transition"
             >
               ✓ Add Student
             </button>
@@ -236,31 +236,31 @@ export default function StudentRollManagement() {
       {/* Students List */}
       {selectedCourse && selectedYear && selectedSection && (
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">
+          <h3 className="text-base md:text-lg font-semibold text-white mb-4">
             Total Students: {students.length}
           </h3>
 
           {students.length > 0 ? (
-            <div className="bg-slate-700 rounded-lg overflow-hidden max-h-96 overflow-y-auto">
-              <table className="w-full">
+            <div className="bg-slate-700 rounded-lg overflow-x-auto overflow-y-auto max-h-96">
+              <table className="w-full text-sm md:text-base">
                 <thead className="bg-slate-600 sticky top-0">
                   <tr>
-                    <th className="px-4 py-3 text-left text-white">Roll No</th>
-                    <th className="px-4 py-3 text-left text-white">Student Name</th>
-                    <th className="px-4 py-3 text-left text-white">Email</th>
-                    <th className="px-4 py-3 text-center text-white">Action</th>
+                    <th className="px-2 md:px-4 py-2 md:py-3 text-left text-white text-xs md:text-sm">Roll No</th>
+                    <th className="px-2 md:px-4 py-2 md:py-3 text-left text-white text-xs md:text-sm">Name</th>
+                    <th className="px-2 md:px-4 py-2 md:py-3 text-left text-white text-xs md:text-sm hidden sm:table-cell">Email</th>
+                    <th className="px-2 md:px-4 py-2 md:py-3 text-center text-white text-xs md:text-sm">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-600">
                   {students.map(student => (
                     <tr key={student.id} className="hover:bg-slate-600 transition">
-                      <td className="px-4 py-3 text-white font-semibold">{student.rollNo}</td>
-                      <td className="px-4 py-3 text-slate-200">{student.name}</td>
-                      <td className="px-4 py-3 text-slate-200">{student.email}</td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-2 md:px-4 py-2 md:py-3 text-white font-semibold text-xs md:text-sm">{student.rollNo}</td>
+                      <td className="px-2 md:px-4 py-2 md:py-3 text-slate-200 text-xs md:text-sm">{student.name}</td>
+                      <td className="px-2 md:px-4 py-2 md:py-3 text-slate-200 text-xs md:text-sm hidden sm:table-cell">{student.email}</td>
+                      <td className="px-2 md:px-4 py-2 md:py-3 text-center">
                         <button
                           onClick={() => handleDeleteStudent(student.id)}
-                          className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition"
+                          className="px-2 md:px-3 py-1 bg-red-600 text-white text-xs md:text-sm rounded hover:bg-red-700 transition"
                         >
                           Delete
                         </button>

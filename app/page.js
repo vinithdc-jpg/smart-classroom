@@ -65,25 +65,25 @@ export default function HomePage() {
       )}
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-12">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
             {/* Left side - Text */}
             <div>
-              <h2 className="text-4xl font-bold text-white mb-4">Welcome to Smart Campus</h2>
-              <p className="text-blue-100 text-lg mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">Welcome to Smart Campus</h2>
+              <p className="text-blue-100 text-sm sm:text-base md:text-lg mb-6">
                 Manage attendance, allocate classrooms, and track student performance efficiently.
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   href="/admin"
-                  className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-blue-600 font-semibold text-sm sm:text-base rounded-lg hover:bg-blue-50 transition text-center"
                 >
                   👨‍💼 Admin Dashboard
                 </Link>
                 <Link
                   href="/student/login"
-                  className="px-6 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-700 text-white font-semibold text-sm sm:text-base rounded-lg hover:bg-blue-800 transition text-center"
                 >
                   👨‍🎓 Student Login
                 </Link>
@@ -91,22 +91,22 @@ export default function HomePage() {
             </div>
 
             {/* Right side - Features */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-blue-700 p-4 rounded-lg">
-                <p className="text-3xl mb-2">📋</p>
-                <p className="text-white font-semibold">Attendance</p>
+            <div className="grid grid-cols-2 gap-2 md:gap-4">
+              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
+                <p className="text-2xl md:text-3xl mb-2">📋</p>
+                <p className="text-white font-semibold text-sm md:text-base">Attendance</p>
               </div>
-              <div className="bg-blue-700 p-4 rounded-lg">
-                <p className="text-3xl mb-2">🏢</p>
-                <p className="text-white font-semibold">Room Booking</p>
+              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
+                <p className="text-2xl md:text-3xl mb-2">🏢</p>
+                <p className="text-white font-semibold text-sm md:text-base">Classrooms</p>
               </div>
-              <div className="bg-blue-700 p-4 rounded-lg">
-                <p className="text-3xl mb-2">👥</p>
-                <p className="text-white font-semibold">Student Mgmt</p>
+              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
+                <p className="text-2xl md:text-3xl mb-2">📊</p>
+                <p className="text-white font-semibold text-sm md:text-base">Analytics</p>
               </div>
-              <div className="bg-blue-700 p-4 rounded-lg">
-                <p className="text-3xl mb-2">📊</p>
-                <p className="text-white font-semibold">Analytics</p>
+              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
+                <p className="text-2xl md:text-3xl mb-2">👥</p>
+                <p className="text-white font-semibold text-sm md:text-base">Students</p>
               </div>
             </div>
           </div>

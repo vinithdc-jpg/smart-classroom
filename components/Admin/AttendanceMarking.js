@@ -125,14 +125,14 @@ export default function AttendanceMarking() {
       )}
 
       {/* Selection Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mb-6">
         {/* Course Selection */}
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Course</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Course</label>
           <select
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
           >
             <option value="">Select Course</option>
             {courses.map(course => (
@@ -143,11 +143,11 @@ export default function AttendanceMarking() {
 
         {/* Year Selection */}
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Year</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Year</label>
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
             disabled={!selectedCourse}
           >
             <option value="">Select Year</option>
@@ -159,11 +159,11 @@ export default function AttendanceMarking() {
 
         {/* Section Selection */}
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Section</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Section</label>
           <select
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
             disabled={!selectedYear}
           >
             <option value="">Select Section</option>
@@ -175,11 +175,11 @@ export default function AttendanceMarking() {
 
         {/* Subject Selection */}
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Subject</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Subject</label>
           <select
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
             disabled={!selectedYear || subjects.length === 0}
           >
             <option value="">Select Subject</option>
@@ -191,22 +191,22 @@ export default function AttendanceMarking() {
       </div>
 
       {/* Date Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4 mb-6">
         <div>
-          <label className="block text-white text-sm font-semibold mb-2">Date</label>
+          <label className="block text-white text-xs sm:text-sm font-semibold mb-2">Date</label>
           <input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-full px-4 py-2 bg-slate-700 text-white border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
+            className="w-full px-3 md:px-4 py-2 bg-slate-700 text-white text-sm border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500"
           />
         </div>
 
         {/* Class Info */}
         {selectedCourse && selectedYear && selectedSection && (
           <div className="flex items-end">
-            <div className="text-slate-300 text-sm">
-              <span className="font-semibold">Selected Class:</span> {details.courseName} {details.yearName} {details.sectionName}
+            <div className="text-slate-300 text-xs sm:text-sm">
+              <span className="font-semibold">Class:</span> <br className="sm:hidden" />{details.courseName} {details.yearName} {details.sectionName}
             </div>
           </div>
         )}
@@ -215,42 +215,42 @@ export default function AttendanceMarking() {
       {/* Attendance List */}
       {students.length > 0 && (
         <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-white">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+            <h3 className="text-base md:text-lg font-semibold text-white">
               Students ({students.length}) - Present: {presentCount}
             </h3>
           </div>
 
-          <div className="bg-slate-700 rounded-lg overflow-hidden max-h-96 overflow-y-auto">
-            <table className="w-full">
+          <div className="bg-slate-700 rounded-lg overflow-x-auto overflow-y-auto max-h-96">
+            <table className="w-full text-sm md:text-base">
               <thead className="bg-slate-600 sticky top-0">
                 <tr>
-                  <th className="px-4 py-3 text-left text-white">Roll No</th>
-                  <th className="px-4 py-3 text-left text-white">Name</th>
-                  <th className="px-4 py-3 text-center text-white">Present</th>
-                  <th className="px-4 py-3 text-center text-white">Status</th>
+                  <th className="px-2 md:px-4 py-2 md:py-3 text-left text-white text-xs md:text-sm">Roll No</th>
+                  <th className="px-2 md:px-4 py-2 md:py-3 text-left text-white text-xs md:text-sm">Name</th>
+                  <th className="px-2 md:px-4 py-2 md:py-3 text-center text-white text-xs md:text-sm">Present</th>
+                  <th className="px-2 md:px-4 py-2 md:py-3 text-center text-white text-xs md:text-sm">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-600">
                 {students.map(student => (
                   <tr key={student.id} className="hover:bg-slate-600 transition">
-                    <td className="px-4 py-3 text-slate-200">{student.rollNo}</td>
-                    <td className="px-4 py-3 text-slate-200">{student.name}</td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-2 md:px-4 py-2 md:py-3 text-slate-200 text-xs md:text-sm font-medium">{student.rollNo}</td>
+                    <td className="px-2 md:px-4 py-2 md:py-3 text-slate-200 text-xs md:text-sm">{student.name}</td>
+                    <td className="px-2 md:px-4 py-2 md:py-3 text-center">
                       <input
                         type="checkbox"
                         checked={attendance[student.id] || false}
                         onChange={() => handleToggleAttendance(student.id)}
-                        className="w-5 h-5 cursor-pointer"
+                        className="w-4 md:w-5 h-4 md:h-5 cursor-pointer"
                       />
                     </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    <td className="px-2 md:px-4 py-2 md:py-3 text-center">
+                      <span className={`px-2 md:px-3 py-1 rounded text-xs md:text-sm font-semibold ${
                         attendance[student.id] 
                           ? 'bg-green-900 text-green-200' 
                           : 'bg-red-900 text-red-200'
                       }`}>
-                        {attendance[student.id] ? '✓ Present' : '✗ Absent'}
+                        {attendance[student.id] ? '✓' : '✗'} <span className="hidden sm:inline">{attendance[student.id] ? 'Present' : 'Absent'}</span>
                       </span>
                     </td>
                   </tr>
@@ -262,11 +262,11 @@ export default function AttendanceMarking() {
       )}
 
       {/* Submit Button */}
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
         <button
           onClick={handleSubmitAttendance}
           disabled={students.length === 0}
-          className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-4 md:px-6 py-2 bg-blue-600 text-white font-semibold text-sm rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           ✓ Submit Attendance
         </button>
