@@ -6,6 +6,8 @@ import AdminSidebar from '@/components/Admin/AdminSidebar';
 import BookingsTable from '@/components/Admin/BookingsTable';
 import RoomManagement from '@/components/Admin/RoomManagement';
 import AdminOverview from '@/components/Admin/AdminOverview';
+import AttendanceMarking from '@/components/Admin/AttendanceMarking';
+import StudentRollManagement from '@/components/Admin/StudentRollManagement';
 import { mockFloors, mockRooms, mockBookings } from '@/lib/mockDb';
 
 export default function AdminPage() {
@@ -89,6 +91,14 @@ export default function AdminPage() {
                   onDeleteRoom={handleDeleteRoom}
                   onAddRoom={handleAddRoom}
                 />
+              )}
+
+              {activeTab === 'attendance' && (
+                <AttendanceMarking />
+              )}
+
+              {activeTab === 'students' && (
+                <StudentRollManagement />
               )}
 
               {activeTab === 'floors' && (

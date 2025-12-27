@@ -12,6 +12,8 @@ export default function AdminSidebar({ activeTab, onTabChange }) {
     { id: 'bookings', label: 'Bookings', icon: '📋' },
     { id: 'rooms', label: 'Rooms', icon: '🏢' },
     { id: 'floors', label: 'Floors', icon: '🏗️' },
+    { id: 'attendance', label: 'Mark Attendance', icon: '✓' },
+    { id: 'students', label: 'Student Management', icon: '👥' },
     { id: 'analytics', label: 'Analytics', icon: '📈' }
   ];
 

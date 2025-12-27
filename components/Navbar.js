@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function Navbar() {
   const [user] = useState({ name: 'John Doe', role: 'user' });
@@ -10,12 +11,25 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo & Title */}
-          <div className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition">
             <div className="text-2xl font-bold text-blue-400">🏢</div>
             <div>
               <h1 className="text-xl font-bold text-white">Smart Campus</h1>
               <p className="text-xs text-slate-400">Room Allocation System</p>
             </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/" className="text-slate-400 hover:text-white transition text-sm">
+              Home
+            </Link>
+            <Link href="/admin" className="text-slate-400 hover:text-white transition text-sm">
+              Admin Dashboard
+            </Link>
+            <Link href="/student/login" className="text-slate-400 hover:text-white transition text-sm">
+              Student Portal
+            </Link>
           </div>
 
           {/* User Info */}
