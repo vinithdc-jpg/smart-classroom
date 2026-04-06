@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from '@/lib/mockDb';
 
 export default function StudentLoginPage() {
   const router = useRouter();
@@ -17,30 +16,23 @@ export default function StudentLoginPage() {
     setLoading(true);
 
     try {
-      // Validate roll number
-      const student = db.students.getByRollNo(rollNo);
-      
-      if (!student) {
-        setError('❌ Roll Number not found. Please check your Roll Number.');
-        setLoading(false);
-        return;
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rollNo, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setRollNo('');
+        setPassword('');
+        router.push('/student/dashboard');
+      } else {
+        setError(data.error || 'Login failed');
       }
-
-      // For demo purposes, we're accepting any non-empty password
-      // In production, validate against hashed password
-      if (!password) {
-        setError('❌ Please enter password');
-        setLoading(false);
-        return;
-      }
-
-      // Store student info in sessionStorage for the dashboard
-      sessionStorage.setItem('loggedInStudent', JSON.stringify(student));
-
-      // Redirect to student dashboard
-      router.push('/student/dashboard');
     } catch (err) {
-      setError('❌ An error occurred. Please try again.');
+      setError('Network error. Please try again.');
     } finally {
       setLoading(false);
     }

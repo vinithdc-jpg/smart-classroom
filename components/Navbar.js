@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 
 export default function Navbar() {
-  const [user] = useState({ name: 'John Doe', role: 'user' });
+  const [user] = useState({ name: 'Admin User', role: 'admin' });
 
   return (
     <nav className="bg-slate-800 border-b border-slate-700 shadow-lg">
@@ -15,7 +15,7 @@ export default function Navbar() {
             <div className="text-2xl font-bold text-blue-400">🏢</div>
             <div>
               <h1 className="text-xl font-bold text-white">Smart Campus</h1>
-              <p className="text-xs text-slate-400">Room Allocation System</p>
+              <p className="text-xs text-slate-400">Attendance System</p>
             </div>
           </Link>
 
@@ -25,10 +25,13 @@ export default function Navbar() {
               Home
             </Link>
             <Link href="/admin" className="text-slate-400 hover:text-white transition text-sm">
-              Admin Dashboard
+              Admin
+            </Link>
+            <Link href="/admin/manage-passwords" className="text-slate-400 hover:text-white transition text-sm">
+              Student Passwords
             </Link>
             <Link href="/student/login" className="text-slate-400 hover:text-white transition text-sm">
-              Student Portal
+              Student Login
             </Link>
           </div>
 

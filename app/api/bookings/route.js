@@ -50,46 +50,55 @@ export async function POST(request) {
     const body = await request.json();
 
     // Validation
-    if (!body.roomId || !body.bookingDate || !body.startTime || !body.endTime) {
-      return Response.json(
-        {
-          success: false,
-          error: 'Room ID, date, start time, and end time are required'
-        },
-        { status: 400 }
-      );
+    if (!body.roomId || !body.bookingDate || !body.startTime || !body.endTime || !body.userId) {
+      return Response.json({ success: false, error: 'Room ID, date, start time, end time, and userId are required' }, { status: 400 });
     }
 
-    // Check for conflicts
-    const conflicts = db.bookings.checkConflict(
-      body.roomId,
-      body.bookingDate,
-      body.startTime,
-      body.endTime
-    );
+    // Basic time validation
+    const toMinutes = (t) => {
+      const [hh, mm] = String(t).split(':').map(Number);
+      if (Number.isNaN(hh) || Number.isNaN(mm)) return null;
+      return hh * 60 + mm;
+    };
+
+    const s = toMinutes(body.startTime);
+    const e = toMinutes(body.endTime);
+
+    if (s === null || e === null || e <= s) {
+      return Response.json({ success: false, error: 'Invalid time range: end time must be after start time' }, { status: 400 });
+    }
+
+    // Allowed booking window (configurable)
+    const ALLOWED_START = toMinutes(body.allowedStart || '07:00');
+    const ALLOWED_END = toMinutes(body.allowedEnd || '22:00');
+
+    if (s < ALLOWED_START || e > ALLOWED_END) {
+      return Response.json({ success: false, error: `Bookings allowed between ${body.allowedStart || '07:00'} and ${body.allowedEnd || '22:00'}` }, { status: 400 });
+    }
+
+    // Check for conflicts with confirmed/pending bookings
+    const conflicts = db.bookings.checkConflict(body.roomId, body.bookingDate, body.startTime, body.endTime, { includeStatuses: ['confirmed', 'pending'] });
 
     if (conflicts.length > 0) {
-      return Response.json(
-        {
-          success: false,
-          error: 'Time slot is already booked',
-          conflicts
-        },
-        { status: 409 }
-      );
+      return Response.json({ success: false, error: 'Time slot conflicts with existing bookings', conflicts }, { status: 409 });
     }
 
+    // For demo: if requester indicates admin or forceConfirm, auto-confirm; otherwise create as pending
+    const isAdmin = body.requesterRole === 'admin' || body.forceConfirm === true;
+
     const newBooking = db.bookings.create({
-      ...body,
-      status: 'confirmed',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      roomId: body.roomId,
+      userId: body.userId,
+      bookingDate: new Date(body.bookingDate),
+      startTime: body.startTime,
+      endTime: body.endTime,
+      purpose: body.purpose || '',
+      participantCount: body.participantCount || 1,
+      notes: body.notes || '',
+      status: isAdmin ? 'confirmed' : 'pending'
     });
 
-    return Response.json(
-      { success: true, data: newBooking },
-      { status: 201 }
-    );
+    return Response.json({ success: true, data: newBooking }, { status: 201 });
   } catch (error) {
     return Response.json(
       { success: false, error: error.message },

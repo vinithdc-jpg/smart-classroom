@@ -40,6 +40,22 @@ export async function PUT(request, { params }) {
       );
     }
 
+    // Admin actions: approve / reject / override
+    if (body.action === 'approve') {
+      const result = db.bookings.approve(params.id, { override: !!body.override });
+      if (!result) return Response.json({ success: false, error: 'Booking not found' }, { status: 404 });
+      if (!result.success) {
+        return Response.json({ success: false, error: 'Conflicts exist', conflicts: result.conflicts }, { status: 409 });
+      }
+      return Response.json({ success: true, data: result.booking });
+    }
+
+    if (body.action === 'reject') {
+      const updated = db.bookings.update(params.id, { ...booking, status: 'cancelled' });
+      return Response.json({ success: true, data: updated });
+    }
+
+    // default: update metadata
     const updatedBooking = db.bookings.update(params.id, {
       ...booking,
       ...body,

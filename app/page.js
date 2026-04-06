@@ -92,10 +92,10 @@ export default function HomePage() {
 
             {/* Right side - Features */}
             <div className="grid grid-cols-2 gap-2 md:gap-4">
-              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
+              <Link href="/admin/attendance" className="bg-blue-700 p-3 md:p-4 rounded-lg hover:opacity-90 transition cursor-pointer">
                 <p className="text-2xl md:text-3xl mb-2">📋</p>
                 <p className="text-white font-semibold text-sm md:text-base">Attendance</p>
-              </div>
+              </Link>
               <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
                 <p className="text-2xl md:text-3xl mb-2">🏢</p>
                 <p className="text-white font-semibold text-sm md:text-base">Classrooms</p>

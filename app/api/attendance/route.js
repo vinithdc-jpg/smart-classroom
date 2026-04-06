@@ -87,12 +87,26 @@ export async function POST(request) {
           return NextResponse.json({ error: 'Attendance already recorded for this student on this date' }, { status: 409 });
         }
 
+        // Support `status` strings from UI (Present/Absent/Late)
+        let finalIsPresent = true;
+        let statusStr = null;
+        if (typeof body.status === 'string') {
+          statusStr = body.status;
+          const s = body.status.toLowerCase();
+          if (s === 'absent' || s === 'a') finalIsPresent = false;
+          else finalIsPresent = true; // Present/Late considered present for percentage
+        } else if (typeof isPresent === 'boolean') {
+          finalIsPresent = isPresent;
+          statusStr = isPresent ? 'Present' : 'Absent';
+        }
+
         const record = db.attendance.create({ 
           studentId, 
           classId, 
           subjectId, 
           date: new Date(date), 
-          isPresent: isPresent !== undefined ? isPresent : true,
+          isPresent: finalIsPresent,
+          status: statusStr,
           recordedBy: recordedBy || 'admin'
         });
 
