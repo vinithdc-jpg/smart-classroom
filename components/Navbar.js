@@ -1,52 +1,68 @@
 'use client';
 
-import React, { useState } from 'react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
-  const [user] = useState({ name: 'Admin User', role: 'admin' });
+  const [theme, setTheme] = useState('dark');
+  const user = { name: 'Mia Tanner', role: 'Student' };
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem('classroom-theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('theme-dark', theme === 'dark');
+    document.documentElement.classList.toggle('theme-light', theme === 'light');
+    window.localStorage.setItem('classroom-theme', theme);
+  }, [theme]);
 
   return (
-    <nav className="bg-slate-800 border-b border-slate-700 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo & Title */}
-          <Link href="/" className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition">
-            <div className="text-2xl font-bold text-blue-400">🏢</div>
-            <div>
-              <h1 className="text-xl font-bold text-white">Smart Campus</h1>
-              <p className="text-xs text-slate-400">Attendance System</p>
-            </div>
-          </Link>
+    <nav className="sticky top-0 z-40 border-b border-white/10 bg-[rgba(7,8,15,0.82)] backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4">
+        <div className="flex items-center gap-3">
+          <div className="rounded-3xl bg-linear-to-br from-violet-500 via-fuchsia-500 to-indigo-500 p-3 shadow-[0_18px_45px_rgba(139,92,246,0.24)]">
+            <span className="text-xl">🎓</span>
+          </div>
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-slate-400">ClassHive</p>
+            <h1 className="text-lg font-semibold text-white">Modern Learning Hub</h1>
+          </div>
+        </div>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-slate-400 hover:text-white transition text-sm">
-              Home
+        <div className="flex flex-1 items-center justify-between gap-3 sm:justify-end">
+          <div className="hidden md:flex items-center gap-4 text-sm text-slate-300">
+            <Link href="/" className="rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-white">
+              Dashboard
             </Link>
-            <Link href="/admin" className="text-slate-400 hover:text-white transition text-sm">
-              Admin
+            <Link href="/course" className="rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-white">
+              Course
             </Link>
-            <Link href="/admin/manage-passwords" className="text-slate-400 hover:text-white transition text-sm">
-              Student Passwords
+            <Link href="/assignment" className="rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-white">
+              Assignment
             </Link>
-            <Link href="/student/login" className="text-slate-400 hover:text-white transition text-sm">
-              Student Login
+            <Link href="/chat" className="rounded-full px-3 py-2 transition hover:bg-white/10 hover:text-white">
+              Chat
             </Link>
           </div>
 
-          {/* User Info */}
-          <div className="flex items-center space-x-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-white">{user.name}</p>
-              <p className="text-xs text-slate-400 capitalize">{user.role}</p>
-            </div>
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-              {user.name.charAt(0)}
-            </div>
-            <button className="text-sm text-slate-400 hover:text-white transition">
-              Logout
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 transition hover:border-white/20 hover:bg-white/10"
+            >
+              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
             </button>
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/20 text-white">M</span>
+              <div className="hidden sm:block text-left">
+                <p className="text-xs text-slate-400">Welcome back</p>
+                <p className="text-sm font-medium text-white">{user.name}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

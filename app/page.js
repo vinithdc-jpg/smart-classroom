@@ -1,244 +1,207 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import GlassyCard from '@/components/ui/GlassyCard';
 import Navbar from '@/components/Navbar';
-import FloorSelector from '@/components/FloorSelector';
-import RoomGrid from '@/components/RoomGrid';
-import BookingModal from '@/components/BookingModal';
-import { db, mockFloors, mockRooms, mockBookings } from '@/lib/mockDb';
+
+const courses = [
+  {
+    title: 'Applied Mathematics',
+    instructor: 'Dr. Stella Hart',
+    progress: 82,
+    due: '3 assignments due',
+    color: 'from-violet-500 to-fuchsia-500'
+  },
+  {
+    title: 'Modern Physics',
+    instructor: 'Prof. Luis Chen',
+    progress: 68,
+    due: '1 quiz due',
+    color: 'from-indigo-500 to-violet-500'
+  },
+  {
+    title: 'Design & Communication',
+    instructor: 'Ms. Zara Patel',
+    progress: 93,
+    due: 'New announcement',
+    color: 'from-fuchsia-500 to-pink-500'
+  }
+];
+
+const assignments = [
+  {
+    name: 'Lab Report: Kinematics',
+    course: 'Modern Physics',
+    due: 'Apr 10',
+    status: 'Due Soon',
+    tag: 'Physics'
+  },
+  {
+    name: 'Project Proposal',
+    course: 'Design & Communication',
+    due: 'Apr 13',
+    status: 'Pending',
+    tag: 'Design'
+  },
+  {
+    name: 'Quiz: Vector Algebra',
+    course: 'Applied Mathematics',
+    due: 'Apr 11',
+    status: 'Review',
+    tag: 'Math'
+  }
+];
+
+const notifications = [
+  { title: 'New announcement from Prof. Hart', detail: 'Midterm review session today at 5 PM' },
+  { title: 'Assignment grading available', detail: 'Your last quiz score is ready' },
+  { title: 'Discussion reply received', detail: 'Ms. Patel answered your question' }
+];
 
 export default function HomePage() {
-  const [floors, setFloors] = useState([]);
-  const [rooms, setRooms] = useState([]);
-  const [bookings, setBookings] = useState([]);
-  const [selectedFloor, setSelectedFloor] = useState(null);
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [showRoomBooking, setShowRoomBooking] = useState(false);
-
-  // Initialize data
-  useEffect(() => {
-    setFloors(mockFloors);
-    setRooms(mockRooms);
-    setBookings(mockBookings);
-    // Set first active floor as default
-    const firstActive = mockFloors.find((f) => f.isActive);
-    if (firstActive) {
-      setSelectedFloor(firstActive.id);
-    }
-  }, []);
-
-  const handleRoomSelect = (room) => {
-    setSelectedRoom(room);
-    setShowBookingModal(true);
-  };
-
-  const handleBooking = (bookingData) => {
-    // Create new booking
-    const newBooking = db.bookings.create({
-      ...bookingData,
-      userId: '1',
-      status: 'confirmed'
-    });
-
-    setBookings((prev) => [...prev, newBooking]);
-    setShowBookingModal(false);
-    setSelectedRoom(null);
-
-    // Show success message
-    setSuccessMessage(`✅ Room ${selectedRoom.roomNumber} booked successfully!`);
-    setTimeout(() => setSuccessMessage(''), 3000);
-  };
-
   return (
-    <div className="min-h-screen bg-slate-900">
-      {/* Navbar */}
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
 
-      {/* Success Message */}
-      {successMessage && (
-        <div className="bg-green-900/50 border-l-4 border-green-500 px-4 py-3 text-green-400 text-sm animate-pulse">
-          {successMessage}
-        </div>
-      )}
+      <main className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+        <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+          <section className="space-y-6">
+            <GlassyCard className="p-8">
+              <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Welcome back,</p>
+                  <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white">Your learning dashboard</h1>
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
+                    Track courses, assignments, announcements, and classroom conversations from one polished hub.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Link href="/course" className="rounded-3xl border border-white/10 bg-white/5 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10">
+                    View course details
+                  </Link>
+                  <Link href="/assignment" className="rounded-3xl bg-linear-to-r from-violet-500 to-fuchsia-500 px-5 py-3 text-center text-sm font-semibold text-white shadow-[0_20px_40px_rgba(139,92,246,0.22)] transition hover:opacity-95">
+                    Open assignments
+                  </Link>
+                </div>
+              </div>
+            </GlassyCard>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-8 md:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
-            {/* Left side - Text */}
-            <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">Welcome to Smart Campus</h2>
-              <p className="text-blue-100 text-sm sm:text-base md:text-lg mb-6">
-                Manage attendance, allocate classrooms, and track student performance efficiently.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="/admin"
-                  className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-blue-600 font-semibold text-sm sm:text-base rounded-lg hover:bg-blue-50 transition text-center"
-                >
-                  👨‍💼 Admin Dashboard
+            <div className="grid gap-6 md:grid-cols-3">
+              {[
+                { title: 'Enrolled Courses', value: '6', description: 'Active classes this semester' },
+                { title: 'Upcoming Deadlines', value: '4', description: 'Due in the next 5 days' },
+                { title: 'Unread Alerts', value: '2', description: 'New announcements & replies' }
+              ].map((metric) => (
+                <div key={metric.title} className="glass-panel rounded-3xl p-6">
+                  <p className="text-sm uppercase tracking-[0.3em] text-slate-400">{metric.title}</p>
+                  <p className="mt-4 text-3xl font-semibold text-white">{metric.value}</p>
+                  <p className="mt-2 text-sm text-slate-300">{metric.description}</p>
+                </div>
+              ))}
+            </div>
+
+            <GlassyCard className="p-8">
+              <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Upcoming activity</p>
+                  <h2 className="mt-3 text-2xl font-semibold text-white">Next milestone reminders</h2>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <span className="rounded-full bg-violet-500/20 px-4 py-2 text-sm text-violet-100">Priority: Review</span>
+                  <span className="rounded-full bg-white/5 px-4 py-2 text-sm text-slate-200">2 chats waiting</span>
+                </div>
+              </div>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-3">
+                {assignments.slice(0, 3).map((assignment) => (
+                  <div key={assignment.name} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                    <p className="text-sm font-semibold text-white">{assignment.name}</p>
+                    <p className="mt-2 text-sm text-slate-400">{assignment.course}</p>
+                    <div className="mt-4 flex items-center justify-between gap-3 text-sm text-slate-300">
+                      <span>{assignment.status}</span>
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-slate-200">{assignment.due}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </GlassyCard>
+
+            <GlassyCard className="p-8">
+              <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Community</p>
+                  <h2 className="mt-3 text-2xl font-semibold text-white">Recent announcements</h2>
+                </div>
+                <Link href="/chat" className="rounded-3xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                  Open discussion threads
                 </Link>
-                <Link
-                  href="/student/login"
-                  className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-700 text-white font-semibold text-sm sm:text-base rounded-lg hover:bg-blue-800 transition text-center"
-                >
-                  👨‍🎓 Student Login
-                </Link>
               </div>
-            </div>
 
-            {/* Right side - Features */}
-            <div className="grid grid-cols-2 gap-2 md:gap-4">
-              <Link href="/admin/attendance" className="bg-blue-700 p-3 md:p-4 rounded-lg hover:opacity-90 transition cursor-pointer">
-                <p className="text-2xl md:text-3xl mb-2">📋</p>
-                <p className="text-white font-semibold text-sm md:text-base">Attendance</p>
-              </Link>
-              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
-                <p className="text-2xl md:text-3xl mb-2">🏢</p>
-                <p className="text-white font-semibold text-sm md:text-base">Classrooms</p>
+              <div className="mt-8 space-y-4">
+                {notifications.map((note) => (
+                  <div key={note.title} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                    <p className="text-sm font-semibold text-white">{note.title}</p>
+                    <p className="mt-2 text-sm text-slate-300">{note.detail}</p>
+                  </div>
+                ))}
               </div>
-              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
-                <p className="text-2xl md:text-3xl mb-2">📊</p>
-                <p className="text-white font-semibold text-sm md:text-base">Analytics</p>
+            </GlassyCard>
+          </section>
+
+          <aside className="space-y-6">
+            <GlassyCard className="p-6">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Student profile</p>
+                  <h2 className="mt-3 text-2xl font-semibold text-white">Mia Tanner</h2>
+                </div>
+                <span className="inline-flex rounded-3xl bg-violet-500/20 px-4 py-2 text-sm text-violet-100">Student</span>
               </div>
-              <div className="bg-blue-700 p-3 md:p-4 rounded-lg">
-                <p className="text-2xl md:text-3xl mb-2">👥</p>
-                <p className="text-white font-semibold text-sm md:text-base">Students</p>
+
+              <div className="mt-8 grid gap-4">
+                <div className="rounded-3xl bg-white/5 p-5">
+                  <p className="text-sm text-slate-400">GPA</p>
+                  <p className="mt-2 text-3xl font-semibold text-white">3.9</p>
+                </div>
+                <div className="rounded-3xl bg-white/5 p-5">
+                  <p className="text-sm text-slate-400">Attendance</p>
+                  <p className="mt-2 text-3xl font-semibold text-white">89%</p>
+                </div>
+                <div className="rounded-3xl bg-white/5 p-5">
+                  <p className="text-sm text-slate-400">Focus Hours</p>
+                  <p className="mt-2 text-3xl font-semibold text-white">28h</p>
+                </div>
               </div>
-            </div>
-          </div>
+            </GlassyCard>
+
+            <GlassyCard className="p-6">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Course list</p>
+                  <h2 className="mt-3 text-2xl font-semibold text-white">Active classes</h2>
+                </div>
+                <span className="rounded-3xl bg-white/5 px-4 py-2 text-sm text-slate-200">6 total</span>
+              </div>
+
+              <div className="mt-8 space-y-4">
+                {courses.map((course) => (
+                  <div key={course.title} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="font-semibold text-white">{course.title}</p>
+                        <p className="mt-1 text-sm text-slate-400">{course.instructor}</p>
+                      </div>
+                      <div className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">{course.due}</div>
+                    </div>
+                    <div className="mt-4 rounded-full bg-white/10 p-1">
+                      <div className={`h-2 rounded-full bg-linear-to-r ${course.color}`} style={{ width: `${course.progress}%` }} />
+                    </div>
+                    <p className="mt-3 text-sm text-slate-300">Progress: {course.progress}%</p>
+                  </div>
+                ))}
+              </div>
+            </GlassyCard>
+          </aside>
         </div>
-      </section>
-
-      {/* Room Booking Section */}
-      {showRoomBooking && (
-        <>
-          {/* Floor Selector */}
-          {selectedFloor && (
-            <FloorSelector
-              floors={floors}
-              selectedFloor={selectedFloor}
-              onFloorChange={setSelectedFloor}
-            />
-          )}
-
-          {/* Main Content */}
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Page Title */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">
-                🏢 Room Allocation Dashboard
-              </h1>
-              <p className="text-slate-400">
-                Select a floor and book your preferred meeting room
-              </p>
-            </div>
-
-            {/* Room Grid */}
-            {selectedFloor && (
-              <RoomGrid
-                rooms={rooms}
-                bookings={bookings}
-                selectedFloor={selectedFloor}
-                onRoomSelect={handleRoomSelect}
-              />
-            )}
-          </main>
-
-          {/* Legend */}
-          <footer className="bg-slate-800 border-t border-slate-700 py-6 mt-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h3 className="text-sm font-medium text-white mb-3">Legend</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-green-500 rounded"></div>
-                  <span className="text-sm text-slate-300">Free</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-red-500 rounded"></div>
-                  <span className="text-sm text-slate-300">Occupied</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-                  <span className="text-sm text-slate-300">Reserved</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-gray-500 rounded"></div>
-                  <span className="text-sm text-slate-300">Unavailable</span>
-                </div>
-              </div>
-            </div>
-          </footer>
-        </>
-      )}
-
-      {/* Feature Cards */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-3xl font-bold text-white mb-8">System Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Admin Features */}
-          <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-            <h3 className="text-xl font-bold text-white mb-4">👨‍💼 Admin Features</h3>
-            <ul className="space-y-2 text-slate-300 text-sm">
-              <li>✓ Mark student attendance by class</li>
-              <li>✓ Create roll numbers for students</li>
-              <li>✓ Select course, year, and section</li>
-              <li>✓ View attendance records</li>
-              <li>✓ Calculate attendance percentage</li>
-              <li>✓ Manage room bookings</li>
-            </ul>
-          </div>
-
-          {/* Student Features */}
-          <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-            <h3 className="text-xl font-bold text-white mb-4">👨‍🎓 Student Features</h3>
-            <ul className="space-y-2 text-slate-300 text-sm">
-              <li>✓ Login with roll number</li>
-              <li>✓ View attendance records</li>
-              <li>✓ Check attendance percentage</li>
-              <li>✓ Subject-wise attendance</li>
-              <li>✓ Attendance history</li>
-              <li>✓ Performance tracking</li>
-            </ul>
-          </div>
-
-          {/* System Features */}
-          <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-            <h3 className="text-xl font-bold text-white mb-4">⚙️ System Features</h3>
-            <ul className="space-y-2 text-slate-300 text-sm">
-              <li>✓ Room booking system</li>
-              <li>✓ Floor management</li>
-              <li>✓ Real-time availability</li>
-              <li>✓ Analytics dashboard</li>
-              <li>✓ User authentication</li>
-              <li>✓ Responsive design</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-800 border-t border-slate-700 py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400 text-sm">
-            © 2025 Smart Campus - Room Allocation & Attendance Management System
-          </p>
-          <div className="mt-4 flex justify-center gap-6">
-            <Link href="/admin" className="text-blue-400 hover:text-blue-300 text-sm">
-              Admin
-            </Link>
-            <Link href="/student/login" className="text-blue-400 hover:text-blue-300 text-sm">
-              Student
-            </Link>
-            <a href="#" className="text-blue-400 hover:text-blue-300 text-sm">
-              Contact
-            </a>
-          </div>
-        </div>
-      </footer>
+      </main>
     </div>
   );
 }
